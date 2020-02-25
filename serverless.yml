@@ -1,0 +1,63 @@
+service: step-functions-offline
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'eu-central-1'}
+  memorySize: 512
+  timeout: 30
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - lambda:InvokeFunction
+        - lambda:InvokeAsync
+      Resource: "*"
+  deploymentBucket:
+      name: serverless-artifacts-${opt:stage, 'dev'}
+      deploymentPrefix: step-functions-offline
+      serverSideEncryption: AES256
+      tags:
+        env: ${opt:stage, 'dev'}
+        service: step-functions-offline
+
+custom:
+  webpack:
+    webpackConfig: 'webpack.config.js'
+    includeModules: true
+    packager: 'npm'
+    excludeFiles: src/**/*.test.ts
+  serverless-offline:
+    port: 3001
+
+functions:
+  firstFunction:
+    handler: src/lambdas/firstFunction/index.handler
+    name: ${self:service}-${self:provider.stage}-firstFunction
+  secondFunction:
+    handler: src/lambdas/secondFunction/index.handler
+    name: ${self:service}-${self:provider.stage}-secondFunction
+
+stepFunctions:
+  stateMachines:
+    myStateMachine:
+      name: '${self:service}-${self:provider.stage}'
+      definition:
+        StartAt: FirstFunction
+        States:
+          FirstFunction:
+            Type: Task
+            Resource: 'arn:${self:provider.name}:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:functions.firstFunction.name}'
+            TimeoutSeconds: 300
+            Next: SecondFunction
+          SecondFunction:
+            Type: Task
+            Resource: 'arn:${self:provider.name}:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:functions.secondFunction.name}'
+            TimeoutSeconds: 300
+            End: true
+
+plugins:
+  - serverless-webpack
+  - serverless-step-functions
+  - serverless-pseudo-parameters
+  - serverless-offline

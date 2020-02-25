@@ -1,0 +1,55 @@
+{
+  "name": "step-functions-offline-starter",
+  "version": "1.0.0",
+  "description": "For developing step functions locally",
+  "main": "index.js",
+  "scripts": {
+    "build:lambda": "tsc",
+    "build:env": "docker-compose up --build -d",
+    "state-machine": "docker-compose exec stepfunctions-offline ./run-state-machine.sh",
+    "dev": "npm run build:env && npm run build:lambda && sls offline start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nikita-shevchenko/stepfunction-docker-offline.git"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "babel-loader": "^8.0.6",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.18.3",
+    "husky": "^4.2.1",
+    "serverless": "^1.46.1",
+    "serverless-offline": "^5.6.0",
+    "serverless-pseudo-parameters": "^2.4.0",
+    "serverless-step-functions": "^1.25.0",
+    "serverless-webpack": "^5.3.1",
+    "webpack": "^4.35.2",
+    "webpack-node-externals": "^1.7.2"
+  },
+  "dependencies": {
+    "@types/aws-lambda": "^8.10.40",
+    "@types/jest": "^25.1.2",
+    "@types/node": "^13.7.1",
+    "@typescript-eslint/eslint-plugin": "^2.19.2",
+    "@typescript-eslint/parser": "^2.19.2",
+    "aws-lambda": "^1.0.5",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-import-resolver-typescript": "^2.0.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-json": "^2.0.1",
+    "eslint-plugin-prettier": "^3.1.2",
+    "jest": "^25.1.0",
+    "jest-junit": "^10.0.0",
+    "lint-staged": "^10.0.7",
+    "prettier": "^1.19.1",
+    "serverless-step-functions-offline": "^2.1.4",
+    "ts-jest": "^25.2.0",
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.7.5"
+  }
+}

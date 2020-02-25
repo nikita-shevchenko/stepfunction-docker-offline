@@ -1,0 +1,17 @@
+{
+  "StartAt": "FirstFunction",
+  "States": {
+    "FirstFunction": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:eu-central-1:123456789012:function:step-functions-offline-dev-firstFunction",
+      "TimeoutSeconds": 300,
+      "Next": "SecondFunction"
+    },
+    "SecondFunction": {
+      "Type": "Task",
+      "Resource": "arn:aws:lambda:eu-central-1:123456789012:function:step-functions-offline-dev-secondFunction",
+      "TimeoutSeconds": 300,
+      "End": true
+    }
+  }
+}
